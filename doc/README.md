@@ -103,7 +103,12 @@ F_{Gamma(\alpha, \beta)}(x) = \dfrac{1}{\Gamma(\alpha) \beta^\alpha} \int_0^x t^
 $$
 对于广义高斯分布，其理论值如下：
 $$
-F_X(x) =\begin{cases}0.5 F_{Gamma(\frac{1}{c}, \frac{1}{\beta^c})}(x^c) + 0.5, \quad if\ x \ge 0 \\\\0.5 [1-F_{Gamma(\frac{1}{c}, \frac{1}{\beta^c})}((-x)^c)], \quad if\ x < 0 \\\end{cases}
+F_X(x) =
+\begin{cases}
+0.5 F_{Gamma(\frac{1}{c}, \frac{1}{\beta^c})}(x^c) + 0.5, \quad if\ x \ge 0 \\
+\\
+0.5 [1-F_{Gamma(\frac{1}{c}, \frac{1}{\beta^c})}((-x)^c)], \quad if\ x < 0 \\
+\end{cases}
 $$
 
 那么对于 $F_{Gamma(\frac{1}{c}, \frac{1}{\beta^c})}$，其公式推导过程如下：
@@ -175,8 +180,8 @@ sigma = sqrt(miu_and_sigma_square - pow(miu, 2));
 ```
 
 $$
-\dfrac{\part L}{\part \mu} = \sum_{i=1}^{N} \dfrac{X_i - \mu}{\sigma^2} = 0 \\
-\dfrac{\part L}{\part \sigma} = -\dfrac{N}{\sigma} + \sum_{i=1}^{N} \dfrac{(X_i - \mu)^2}{\sigma^3} = 0
+\dfrac{\partial L}{\partial \mu} = \sum_{i=1}^{N} \dfrac{X_i - \mu}{\sigma^2} = 0 \\
+\dfrac{\partial L}{\partial \sigma} = -\dfrac{N}{\sigma} + \sum_{i=1}^{N} \dfrac{(X_i - \mu)^2}{\sigma^3} = 0
 $$
 
 $\mu, \sigma$ 的最大似然估计值分别为：
