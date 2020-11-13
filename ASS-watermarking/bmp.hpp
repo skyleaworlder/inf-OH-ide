@@ -1,24 +1,39 @@
-#include <Windows.h>
+#include <cstddef>
 #include <iostream>
 #include <string>
 
-using BYTE = u_char;
+using Byte = unsigned char;
+using ByteString = std::basic_string<Byte>;
+
+struct BitmapHeader {
+    Byte signature[2];  // = "BM"
+    uint32_t fileSize;
+    Byte reserved[4];
+    uint32_t dataOffset;
+};
+
+struct BitmapInfoHeader {
+    uint32_t size;  // = 40
+    uint32_t width, height;
+    uint16_t planes;    // = 1
+    uint16_t bitsPerPixel;
+    uint16_t compression;
+    uint16_t imageSize;
+    uint16_t xPixelsPerM, yPixelsPerM;
+    uint16_t colorsUsed;
+    uint16_t importantColors;
+};
+
+struct ColorTable {
+    Byte red, green, blue, reserved;
+};
 
 class BMP {
-
+    BitmapHeader header;
+    BitmapInfoHeader infoHeader;
+    ColorTable colorTable;
+    ByteString pixelData;
 public:
-    BMP() {};
-    ~BMP() {};
-
-public:
-    BITMAPFILEHEADER bmp_hdr;
-    BITMAPINFOHEADER bmp_infoHdr;
-    RGBQUAD* color_tablePtr;
-
-    DWORD bmp_size;
-    WORD bmp_width;
-    WORD bmp_height;
-    WORD bmp_bitPx;
-
-    void BMP_read(std::string bmp_name);
+    BMP() = default;
+    ~BMP() = default;
 };
