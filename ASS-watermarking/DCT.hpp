@@ -26,12 +26,18 @@ namespace DCT {
 
     std::vector<double> DCT_inverse(
         std::vector<double> pixel_arr,
+        size_t q_level,
         size_t N
     );
 
-    size_t bound(double input);
+    int round(double input, bool unsign=1);
 
     std::vector<double> Quant_matrix_gen(
         size_t target_Q
     );
+
+    std::pair<
+        std::vector<double>,
+        std::vector<double>
+    > T_matrix_gen(size_t N);
 }

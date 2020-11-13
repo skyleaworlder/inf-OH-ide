@@ -43,20 +43,40 @@ std::vector<double> DCT::DCT(
 }
 
 std::vector<double> DCT::DCT_inverse(
-    std::vector<double> pixel_arr,
+    std::vector<double> D,
+    size_t q_level,
     size_t N
 ) {
-    assert(pixel_arr.size() == N*N);
-    /* TODO: inverse function of DCT */
+    std::vector<double> C, R;
+    std::vector<double> Q { DCT::Quant_matrix_gen(q_level) };
+
+    assert(D.size() == N*N && Q.size() == N*N);
+    for (size_t index = 0; index < N*N; ++index)
+        C.push_back(DCT::round(D[index] / Q[index], false));
+
+    for (size_t index = 0; index < N*N; ++index)
+        R.push_back(DCT::round(Q[index] * C[index], false));
+
+    for (double elem : R)
+        std::cout << elem << " ";
+    return C;
 }
 
-size_t DCT::bound(double input) {
-    if (input > 255)
-        return 255;
-    else if (input < 0)
-        return 0;
-    else
-        return ceil(input);
+int DCT::round(double input, bool unsign) {
+    if (unsign) {
+        if (input > 255)
+            return 255;
+        else if (input < 0)
+            return 0;
+        else
+            return int(input + 0.5);
+    }
+    else {
+        if (input > 0)
+            return int(input + 0.5);
+        else
+            return int(input - 0.5);
+    }
 }
 
 /*
@@ -76,9 +96,40 @@ std::vector<double> DCT::Quant_matrix_gen(size_t target_Q) {
     std::vector<double> ret;
     for (double elem : DCT::Quant_matrix_50) {
         size_t input = floor((S*elem + 50) / 100);
-        ret.push_back(DCT::bound(input));
+        ret.push_back(DCT::round(input));
     }
     return ret;
+}
+
+std::pair<std::vector<double>, std::vector<double>> DCT::T_matrix_gen(
+    size_t N
+) {
+    std::vector<std::vector<double>> T;
+    for (size_t i = 0; i < N; ++i) {
+        std::vector<double> T_row;
+        for (size_t j = 0; j < N; ++j) {
+            if (i == 0)
+                T_row.push_back(1.0 / sqrt(N));
+            else {
+                double theta = ((2*j + 1) * i*M_PI) / (2.0*N);
+                T_row.push_back(sqrt(2.0/N) * cos(theta));
+            }
+        }
+        T.push_back(T_row);
+    }
+
+    // transpose
+    std::vector<double> T_ret, T_tp_ret;
+    for (size_t i = 0; i < N; ++i)
+        for (size_t j = 0; j < N; ++j) {
+            T_ret.push_back(T[i][j]);
+            T_tp_ret.push_back(T[j][i]);
+        }
+
+    return std::pair<
+            std::vector<double>,
+            std::vector<double>
+        > { T_ret, T_tp_ret };
 }
 
 void test_DCT() {
@@ -102,10 +153,8 @@ void test_DCT() {
     }
     std::cout << std::endl;
 
-    vec = DCT::DCT_inverse(vec, 8);
-    for (double elem : vec) {
-        std::cout << elem << " ";
-    }
+    vec = DCT::DCT_inverse(vec, 50, 8);
+
 
 }
 
@@ -119,9 +168,28 @@ void test_Q_gen() {
     for (double elem : vec)
         std::cout << elem << " ";
     std::cout << std::endl;
+
+    vec = DCT::Quant_matrix_gen(50);
+    for (double elem : vec)
+        std::cout << elem << " ";
+    std::cout << std::endl;
+}
+
+// test well
+void test_T_transpose() {
+    std::pair<std::vector<double>, std::vector<double>> vec { DCT::T_matrix_gen(8) };
+    std::vector<double> T { vec.first };
+    std::vector<double> T_tp { vec.second };
+
+    for (double elem : T)
+        std::cout << elem << " ";
+    std::cout << std::endl;
+    for (double elem : T_tp)
+        std::cout << elem << " ";
 }
 
 int main() {
     //test_DCT();
-    test_Q_gen();
+    //test_Q_gen();
+    test_T_transpose();
 }
