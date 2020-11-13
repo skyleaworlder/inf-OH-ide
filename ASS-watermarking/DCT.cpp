@@ -1,5 +1,17 @@
 #include "DCT.hpp"
-#include <iostream>
+
+// Quantitum Matrix: Q_{50}
+// using Q_{50} as a standard to generate other Matrix
+std::vector<double> DCT::Quant_matrix_50 = std::vector<double> {
+        16, 11, 10, 16, 24, 40, 51, 61,
+        12, 12, 14, 19, 26, 58, 60, 55,
+        14, 13, 16, 24, 40, 57, 69, 56,
+        14, 17, 22, 29, 51, 87, 80, 62,
+        18, 22, 37, 56, 68, 109,103,77,
+        24, 35, 55, 64, 81, 104,113,92,
+        49, 64, 78, 87, 103,121,120,101,
+        72, 92, 95, 98, 112,100,103,99
+};
 
 /*
  * only able to process SQUARE
@@ -12,7 +24,7 @@
  */
 std::vector<double> DCT::DCT(
     std::vector<double> pixel_arr,
-    size_t N
+    const size_t N
 ) {
     assert(pixel_arr.size() == N*N);
     std::vector<double> D;
@@ -51,8 +63,8 @@ std::vector<double> DCT::DCT(
  */
 std::vector<double> DCT::DCT_inverse(
     std::vector<double> D,
-    size_t q_level,
-    size_t N
+    const size_t N,
+    size_t q_level
 ) {
     std::vector<double> C, R;
     std::vector<double> Q { DCT::Quant_matrix_gen(q_level) };
@@ -136,7 +148,7 @@ std::vector<double> DCT::Quant_matrix_gen(size_t target_Q) {
  * using std::pair
  */
 std::pair<std::vector<double>, std::vector<double>> DCT::T_matrix_gen(
-    size_t N
+    const size_t N
 ) {
     /*
      * generate a 2-dim vector: T
@@ -195,81 +207,4 @@ std::vector<double> DCT::Mult_square_matrix(
     }
 
     return ret;
-}
-
-
-/*
- * test part
- */
-void test_DCT() {
-    /*
-     * both test data and algothrim from "Image Compression and the Discrete Cosine Transform",
-     * which written by Ken Cabeen and Peter Gent.
-     */
-    std::vector<double> vec {
-        26, -5, -5, -5, -5, -5, -5, 8,
-        64, 52, 8, 26, 26, 26, 8, -18,
-        126, 70 ,26, 26, 52, 26, -5, -5,
-        111, 52, 8, 52, 52, 38, -5, -5,
-        52, 26, 8, 39, 38, 21, 8, 8,
-        0, 8, -5, 8, 26, 52, 70, 26,
-        -5, -23, -18, 21, 8, 8, 52, 38,
-        -18, 8, -5, -5, -5, 8, 26, 8
-    };
-    vec = DCT::DCT(vec, 8);
-    for (double elem : vec) {
-        std::cout << elem << " ";
-    }
-    std::cout << std::endl;
-
-    vec = DCT::DCT_inverse(vec, 50, 8);
-    for (double elem : vec) {
-        std::cout << elem << " ";
-    }
-}
-
-void test_Q_gen() {
-    std::vector<double> vec { DCT::Quant_matrix_gen(90) };
-    for (double elem : vec)
-        std::cout << elem << " ";
-    std::cout << std::endl;
-
-    vec = DCT::Quant_matrix_gen(10);
-    for (double elem : vec)
-        std::cout << elem << " ";
-    std::cout << std::endl;
-
-    vec = DCT::Quant_matrix_gen(50);
-    for (double elem : vec)
-        std::cout << elem << " ";
-    std::cout << std::endl;
-}
-
-// test well
-void test_T_transpose() {
-    std::pair<std::vector<double>, std::vector<double>> vec { DCT::T_matrix_gen(8) };
-    std::vector<double> T { vec.first };
-    std::vector<double> T_tp { vec.second };
-
-    for (double elem : T)
-        std::cout << elem << " ";
-    std::cout << std::endl;
-    for (double elem : T_tp)
-        std::cout << elem << " ";
-}
-
-// test well
-void test_mult() {
-    std::vector<double> a {4,2,1,4};
-    std::vector<double> b {3,5,8,7};
-    a = DCT::Mult_square_matrix(a,b);
-    for (double elem : a)
-        std::cout << elem << " ";
-}
-
-int main() {
-    test_DCT();
-    //test_Q_gen();
-    //test_T_transpose();
-    //test_mult();
 }
