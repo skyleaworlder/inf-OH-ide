@@ -40,4 +40,9 @@ namespace DCT {
         std::vector<double>,
         std::vector<double>
     > T_matrix_gen(size_t N);
+
+    std::vector<double> Mult_square_matrix(
+        std::vector<double> a,
+        std::vector<double> b
+    );
 }

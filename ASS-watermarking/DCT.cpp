@@ -42,6 +42,13 @@ std::vector<double> DCT::DCT(
     return D;
 }
 
+/*
+ * DCT inverse function
+ * only able to process SQUARE
+ * D: a Compressed Matrix,
+ * q_level: a param to specify Quantitum Matrix
+ * N: size of D
+ */
 std::vector<double> DCT::DCT_inverse(
     std::vector<double> D,
     size_t q_level,
@@ -50,18 +57,40 @@ std::vector<double> DCT::DCT_inverse(
     std::vector<double> C, R;
     std::vector<double> Q { DCT::Quant_matrix_gen(q_level) };
 
+    // generate C
     assert(D.size() == N*N && Q.size() == N*N);
     for (size_t index = 0; index < N*N; ++index)
         C.push_back(DCT::round(D[index] / Q[index], false));
 
+    // generate R
     for (size_t index = 0; index < N*N; ++index)
         R.push_back(DCT::round(Q[index] * C[index], false));
 
-    for (double elem : R)
-        std::cout << elem << " ";
-    return C;
+    // generate T and T'
+    std::pair<
+        std::vector<double>,
+        std::vector<double>
+    > T_Tp { DCT::T_matrix_gen(N) };
+    std::vector<double> T { T_Tp.first }, Tp { T_Tp.second };
+    std::vector<double> mult_res { DCT::Mult_square_matrix(
+        DCT::Mult_square_matrix(Tp, R), T
+    )};
+
+    // round() and +128
+    std::vector<double> ret;
+    for (double elem : mult_res)
+        ret.push_back(DCT::round(elem, false) + 128);
+
+    return ret;
 }
 
+/*
+ * round function
+ * unsign is true:
+ *  input is restricted in [0, 255]
+ * while unsign is false:
+ *  round() is round() in mathematic.
+ */
 int DCT::round(double input, bool unsign) {
     if (unsign) {
         if (input > 255)
@@ -101,9 +130,18 @@ std::vector<double> DCT::Quant_matrix_gen(size_t target_Q) {
     return ret;
 }
 
+/*
+ * return T and Tp
+ * once N given, T and Tp will come.
+ * using std::pair
+ */
 std::pair<std::vector<double>, std::vector<double>> DCT::T_matrix_gen(
     size_t N
 ) {
+    /*
+     * generate a 2-dim vector: T
+     * to generate T' in accordance with programming requirements.
+     */
     std::vector<std::vector<double>> T;
     for (size_t i = 0; i < N; ++i) {
         std::vector<double> T_row;
@@ -132,6 +170,37 @@ std::pair<std::vector<double>, std::vector<double>> DCT::T_matrix_gen(
         > { T_ret, T_tp_ret };
 }
 
+/*
+ * Matrix Mult function
+ * because C++ stdlib not provide Matrix Class
+ * this is a function only process SQUARE!
+ *
+ * input a and b must have the square number of element.
+ */
+std::vector<double> DCT::Mult_square_matrix(
+    std::vector<double> a,
+    std::vector<double> b
+) {
+    assert(a.size() == b.size());
+    std::vector<double> ret;
+
+    size_t len = sqrt(a.size());
+    for (size_t i = 0; i < a.size(); i++) {
+        const size_t row = i / len;
+        const size_t col = i - row * len;
+        double to_push = 0;
+        for (size_t a_j = 0, b_i = 0; a_j < len && b_i < len; ++a_j, ++b_i)
+            to_push += a[row*len + a_j] * b[b_i*len + col];
+        ret.push_back(to_push);
+    }
+
+    return ret;
+}
+
+
+/*
+ * test part
+ */
 void test_DCT() {
     /*
      * both test data and algothrim from "Image Compression and the Discrete Cosine Transform",
@@ -154,8 +223,9 @@ void test_DCT() {
     std::cout << std::endl;
 
     vec = DCT::DCT_inverse(vec, 50, 8);
-
-
+    for (double elem : vec) {
+        std::cout << elem << " ";
+    }
 }
 
 void test_Q_gen() {
@@ -188,8 +258,18 @@ void test_T_transpose() {
         std::cout << elem << " ";
 }
 
+// test well
+void test_mult() {
+    std::vector<double> a {4,2,1,4};
+    std::vector<double> b {3,5,8,7};
+    a = DCT::Mult_square_matrix(a,b);
+    for (double elem : a)
+        std::cout << elem << " ";
+}
+
 int main() {
-    //test_DCT();
+    test_DCT();
     //test_Q_gen();
-    test_T_transpose();
+    //test_T_transpose();
+    //test_mult();
 }
