@@ -23,17 +23,17 @@ struct __attribute__ ((__packed__)) BitmapInfoHeader {
     uint32_t    importantColors;
 };
 
-// struct ColorTable {
-//     Byte red, green, blue, reserved;
-// };
+struct ColorTableItem {
+    Byte red, green, blue, reserved;
+};
 
 class __attribute__ ((__packed__)) BMP {
     BitmapHeader        _header;
     BitmapInfoHeader    _infoHeader;
-    // ColorTable          _colorTable;
+    ColorTableItem*          _colorTable;
     ByteString          _pixelData;
     unsigned int _numColors;
 public:
     BMP(std::string bmpFilePath);
-    ~BMP() = default;
+    ~BMP();
 };

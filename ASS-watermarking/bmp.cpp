@@ -7,12 +7,18 @@ BMP::BMP(
     std::string bmpFilePath
 ) {
     std::ifstream fin { bmpFilePath };
-    BitmapHeader header;
-    fin.read(reinterpret_cast<char*>(&header), 14);
-    BitmapInfoHeader infoHeader;
-    fin.read(reinterpret_cast<char*>(&infoHeader), 40);
-    _numColors = (1 << infoHeader.bitsPerPixel);
+    fin.read(reinterpret_cast<char*>(&_header), 14);
 
+    fin.read(reinterpret_cast<char*>(&_infoHeader), 40);
+    _numColors = (1 << _infoHeader.bitsPerPixel);
+
+    size_t colorTableSize { _header.dataOffset - 0x36 };
+    _colorTable = new ColorTableItem[colorTableSize / 4];
+    fin.read(reinterpret_cast<char*>(_colorTable), colorTableSize);
+}
+
+BMP::~BMP() {
+    delete[] _colorTable;
 }
 
 int main(int argc, char* argv[]) {
