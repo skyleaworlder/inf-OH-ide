@@ -1,5 +1,29 @@
 #include "bmp.hpp"
 
+#include <iostream>
+#include <fstream>
+
+BMP::BMP(
+    std::string bmpFilePath
+) {
+    std::ifstream fin { bmpFilePath };
+    BitmapHeader header;
+    fin.read(reinterpret_cast<char*>(&header), 14);
+    BitmapInfoHeader infoHeader;
+    fin.read(reinterpret_cast<char*>(&infoHeader), 40);
+    _numColors = (1 << infoHeader.bitsPerPixel);
+
+}
+
+int main(int argc, char* argv[]) {
+    if (argc != 2) {
+        std::cerr << "Wrong Arguments." << std::endl;
+    } else {
+        BMP bmp {argv[1]};
+    }
+}
+
+/*
 void BMP::BMP_read(
     std::string bmp_name
 ) {
@@ -36,7 +60,7 @@ void BMP::BMP_read(
      *               21                      3              24
      *
      * so byte_per_line_without_padding need +3
-     */
+     // * /
     size_t byte_per_line_without_padding = bmp_bitPx * bmp_width / 8;
     size_t byte_per_line = (byte_per_line_without_padding+3) / 4 * 4;
 
@@ -60,3 +84,4 @@ void BMP::BMP_read(
 
     return;
 }
+*/
