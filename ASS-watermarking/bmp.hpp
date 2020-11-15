@@ -4,6 +4,8 @@
 using Byte = unsigned char;
 using ByteString = std::basic_string<Byte>;
 
+std::ifstream& operator>>(std::ifstream& in, ByteString& bytes);
+
 struct __attribute__ ((__packed__)) BitmapHeader {
     Byte        signature[2];  // = "BM"
     uint32_t    fileSize;
@@ -27,7 +29,7 @@ struct ColorTableItem {
     Byte red, green, blue, reserved;
 };
 
-class __attribute__ ((__packed__)) BMP {
+class BMP {
     BitmapHeader        _header;
     BitmapInfoHeader    _infoHeader;
     ColorTableItem*          _colorTable;
