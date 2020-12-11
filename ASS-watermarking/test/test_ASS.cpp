@@ -19,22 +19,23 @@ void test_return() {
 
 void test_zigzag() {
     //std::vector<double> arr = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
-    std::vector<double> arr = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25};
-    for (auto elem : arr) {
-        std::cout << elem << " ";
-    }
+    block_8_8 array = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64};
+    size_t zig_num = 3;
     std::cout << std::endl;
-    std::vector<double> zig = _zig_zag(arr);
-    for (auto elem : zig) {
-        std::cout << elem << " ";
+    for (auto arr : array) {
+        for (auto elem : arr)
+            std::cout << elem << " ";
+        std::cout << std::endl;
     }
+
     std::cout << std::endl;
-    zig = _getSlashFromZigZag(zig, 2);
-    for (auto elem : zig) {
-        std::cout << elem << " ";
+    array = SS::imbed(array, 1.0, SS::IMBED_B::POS, zig_num);
+    for (auto arr : array) {
+        for (auto elem : arr)
+            std::cout << elem << " ";
+        std::cout << std::endl;
     }
-    std::cout << std::endl;
-    arr = _imbedSS2Block(arr, zig);
+    std::cout << SS::decode(array, zig_num);
 }
 
 int main() {

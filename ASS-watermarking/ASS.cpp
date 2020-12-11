@@ -4,188 +4,111 @@
 #include <cmath> // for sqrt
 #include "ASS.hpp"
 
-const std::vector<int> w = { -1, 1 };
+const std::array<int, 2> w { -1, 1 };
 
-std::vector<double> SS::imbed(
-    std::vector<double> block,
+block_8_8 SS::imbed(
+    block_8_8 block,
     double strength,
     SS::IMBED_B b,
-    size_t len=8,
     size_t zig_num=3
 ) {
-    assert(block.size() == len*len);
 
-    std::vector<double> DCT_block = DCT::DCT(block, len);
+    std::vector<double> vector_block = _array2vector(block);
+    std::vector<double> DCT_block = DCT::DCT(vector_block, block.size());
+    block_8_8 to_zig_zag = SS::_vector2array(DCT_block);
 
-    // 获得全部 zig-zag 排列矩阵
-    std::vector<double> zig_block = SS::_zig_zag(DCT_block);
-    // 获取用来水印嵌入的 zig-zag 排列的部分
-    std::vector<double> to_process = SS::_getSlashFromZigZag(zig_block, zig_num);
+    for (auto arr : to_zig_zag) {
+        for (auto elem : arr)
+            std::cout << elem << " ";
+        std::cout << std::endl;
+    }
 
-    // 处理，嵌入水印
-    std::vector<double> imbed_arr;
-    for (size_t index = 0; index < to_process.size(); index++)
-        imbed_arr.push_back(to_process[index] + strength*(b ? 1 : -1) * w[index % 2]);
+    std::vector<double> zig_zag_arr = SS::_getZigZagSlash(block, zig_num);
 
-    // 将嵌入水印的 imbed_arr 嵌入到 block 中，形成返回结果
-    std::vector<double> to_ret = _imbedSS2Block(block, imbed_arr);
+    // imbed watermark
+    for (size_t index = 0; index < zig_zag_arr.size(); index++)
+        zig_zag_arr[index] += strength * (b ? 1 : -1) * w[index % 2];
 
-    to_ret = DCT::DCT_inverse(to_ret, len);
+    // 将嵌入水印的部分填回原 block 中
+    // left half
+    size_t zig_zig_idx = 0;
+    for (int zig_beg = zig_num; zig_beg > 0; zig_beg--)
+        for (size_t index = 0; index <= to_zig_zag.size()-zig_beg; index++)
+            to_zig_zag[index][to_zig_zag.size()-zig_beg-index] = zig_zag_arr[zig_zig_idx++];
 
-    return to_ret;
+    // right half
+    for (int zig_beg = 1; zig_beg < zig_num; zig_beg++)
+        for (size_t index = zig_beg; index < to_zig_zag.size(); index++)
+            to_zig_zag[index][to_zig_zag.size()+zig_beg-1-index] = zig_zag_arr[zig_zig_idx++];
+
+    std::vector<double> to_dct_inverse = SS::_array2vector(to_zig_zag);
+    std::vector<double> to_ret = DCT::DCT_inverse(to_dct_inverse, block.size());
+
+    return SS::_vector2array(to_ret);
 }
 
-std::vector<double> SS::decode(
-    std::vector<double> block,
-    size_t len=8,
+
+bool SS::decode(
+    block_8_8 block,
     size_t zig_num=3
 ) {
-    std::vector<double> DCT_block = DCT::DCT(block, len);
-    size_t L_s = 0;
+    std::vector<double> to_dct = SS::_array2vector(block);
+    std::vector<double> DCT_block = DCT::DCT(to_dct, block.size());
+    double L_s = 0;
 
-    std::vector<double> zig_block = SS::_zig_zag(block);
-    std::vector<double> to_process = SS::_getSlashFromZigZag(block, zig_num);
+    size_t cnt = 0;
+    std::vector<double> zig_zag_arr = SS::_getZigZagSlash(block, zig_num);
 
-    std::vector<double> decode_arr;
-    for (size_t index = 0; index < to_process.size(); index++) {
-        L_s += to_process[index] * w[index % 2];
+    for (const auto& elem : zig_zag_arr)
+        std::cout << elem << " ";
+
+    for (size_t index = 0; index < zig_zag_arr.size(); index++) {
+        L_s += zig_zag_arr[index] * w[index % 2];
+        /* debug
+        std::cout << "zig_zag_arr[index]: " << zig_zag_arr[index] << std::endl;
+        std::cout << "w[index%2]: " << w[index % 2] << std::endl;
+        std::cout << "L_s = " << L_s << std::endl;
+        */
     }
 
-    if (L_s > 0) {
-        std::cout << "true" << std::endl;
-        return {};
-    }
-    else {
-        std::cout << "false" << std::endl;
-        return {};
-    }
+    return (L_s >= 0);
 }
 
-std::vector<double> SS::_zig_zag(
-    std::vector<double> input
+std::vector<double> SS::_getZigZagSlash(
+    block_8_8 input,
+    size_t zig_num
 ) {
-    size_t len = static_cast<size_t>(sqrt(input.size()));
-    assert(input.size() == len * len);
+    std::vector<double> zig_zag_arr;
+    // 取出需要嵌入水印的部分
+    // left half
+    for (int zig_beg = zig_num; zig_beg > 0; zig_beg--)
+        for (size_t index = 0; index <= input.size()-zig_beg; index++)
+            zig_zag_arr.push_back(input[index][input.size()-zig_beg-index]);
 
-    std::vector<double> to_ret;
-    size_t row_idx = 0, col_idx = 0;
+    // right half
+    // block[index][block.size()+zig_beg-1-index] is very difficult for me to calculate.
+    for (int zig_beg = 1; zig_beg < zig_num; zig_beg++)
+        for (size_t index = zig_beg; index < input.size(); index++)
+            zig_zag_arr.push_back(input[index][input.size()+zig_beg-1-index]);
 
-    enum STATE {
-        INIT,   RIGHT,      LEFT_DOWN,
-        DOWN,   RIGHT_UP,   END
-    };
+    return zig_zag_arr;
+}
 
-    STATE next_step = STATE::INIT;
-    while(next_step != STATE::END) {
-
-        to_ret.push_back(input[row_idx*len + col_idx]);
-        //std::cout << row_idx << ", " << col_idx << ": " << input[row_idx*len + col_idx] << std::endl; // debug
-        // init
-        if (next_step == STATE::INIT) {
-            next_step = STATE::RIGHT;
-            col_idx += 1;
-        }
-        // end
-        else if (row_idx == (len-1) && col_idx == (len-1)) {
-            next_step = STATE::END;
-        }
-        // corner
-        else if (next_step == STATE::RIGHT_UP && col_idx == len-1 && row_idx == 0) {
-            next_step = STATE::DOWN;
-            row_idx += 1;
-        }
-        // corner
-        else if (next_step == STATE::LEFT_DOWN && row_idx == len-1 && col_idx == 0) {
-            next_step = STATE::RIGHT;
-            col_idx += 1;
-        }
-        // left half || right half
-        else if (
-            (next_step == STATE::RIGHT && row_idx == 0) ||
-            (next_step == STATE::DOWN && col_idx == len-1)
-         ) {
-            next_step = STATE::LEFT_DOWN;
-            col_idx -= 1;
-            row_idx += 1;
-        }
-        // left half || right half
-        else if (
-            (next_step == STATE::DOWN && col_idx == 0) ||
-            (next_step == STATE::RIGHT && row_idx == len-1)
-        ) {
-            next_step = STATE::RIGHT_UP;
-            row_idx -= 1;
-            col_idx += 1;
-        }
-        // left half || right
-        else if (
-            (next_step == STATE::LEFT_DOWN && col_idx == 0) ||
-            (next_step == STATE::RIGHT_UP && col_idx == len-1)
-        ) {
-            next_step = STATE::DOWN;
-            row_idx += 1;
-        }
-        // left half || right half
-        else if (
-            (next_step == STATE::LEFT_DOWN && row_idx == len-1) ||
-            (next_step == STATE::RIGHT_UP && row_idx == 0)
-         ) {
-            next_step = STATE::RIGHT;
-            col_idx += 1;
-        }
-        // normal
-        else if (next_step == STATE::LEFT_DOWN) {
-            col_idx -= 1;
-            row_idx += 1;
-        }
-        // normal
-        else if (next_step == STATE::RIGHT_UP) {
-            row_idx -= 1;
-            col_idx += 1;
-        }
-        else {
-            std::cout << "error!" << std::endl;
-        }
+block_8_8 SS::_vector2array(std::vector<double> input) {
+    assert(input.size() == 8*8);
+    block_8_8 to_ret;
+    for (size_t index = 0; index < input.size(); index++) {
+        size_t row = index / 8;
+        size_t col = index - index / 8 * 8;
+        to_ret[row][col] = input[index];
     }
     return to_ret;
 }
 
-std::vector<double> SS::_getSlashFromZigZag(
-    std::vector<double> input,
-    size_t slash_num
-) {
-    size_t len = static_cast<size_t>(sqrt(input.size()));
-    assert(slash_num <= len);
-
+std::vector<double> SS::_array2vector(block_8_8 input) {
     std::vector<double> to_ret;
-    size_t begin = ((len-slash_num+1)*(len-slash_num)) / 2;
-    size_t end = input.size() - begin;
-    std::cout << begin << " " << end << std::endl;
-    for (size_t index = begin; index < end; index++)
-        to_ret.push_back(input[index]);
-
-    return to_ret;
-}
-
-std::vector<double> SS::_imbedSS2Block(
-    std::vector<double> block,
-    std::vector<double> imbed
-) {
-    // hahahaha
-    size_t front_end = (block.size() - imbed.size()) / 2;
-    size_t back_end = front_end + imbed.size();
-
-    std::vector<double> to_ret;
-    std::cout << front_end << " " << back_end << std::endl;
-    for (size_t index = 0; index < block.size(); index++) {
-        if (index < front_end || index >= back_end) {
-            //std::cout << "c";
-            to_ret.push_back(block[index]);
-        }
-        else {
-            //std::cout << "s";
-            to_ret.push_back(imbed[index-front_end]);
-        }
-    }
+    for (size_t row_idx = 0; row_idx < input.size(); row_idx++)
+        for (size_t col_idx = 0; col_idx < input[row_idx].size(); col_idx++)
+            to_ret.push_back(input[row_idx][col_idx]);
     return to_ret;
 }
