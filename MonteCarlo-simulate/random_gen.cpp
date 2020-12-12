@@ -1,39 +1,69 @@
 #include "random_gen.hpp"
 
-std::uniform_real_distribution<double> U_1 {0,1};
-std::uniform_real_distribution<double> U_2 {0,1};
-std::uniform_int_distribution<int> B {0,1};
-constexpr double twi_pi = M_PI * 2;
 std::random_device rd;
-std::default_random_engine rng {rd()};
+std::mt19937_64 rng(rd());
 
-/* Bernoulli Distribution
-    return 0(P = 0.5 theoretically) or 1(P = 0.5 theoretically)
-*/
-size_t BnlDstrb_single_val() {
-    return B(rng);
+std::vector<double> GGD20(
+    const double size
+) {
+	std::normal_distribution<double> distribution(0, 10.0);
+    std::vector<double> to_ret;
+	for (int i = 0; i < size; ++i)
+		to_ret.push_back(distribution(rng));
+	return to_ret;
 }
 
-/* GGD with shape param c and scope param beta
-    E = Gamma(1/c, 1/(beta^c))^(1/c)  (X = 1)
-        -Gamma(1/c, 1/(beta^c))^(1/c) (X = 0)
-    according to slide fundamentals-cn-ppt--P34
-*/
-std::vector<double> GGD_vector(
-    double beta,
-    double c,
-    double size
+std::vector<double> GGD10(
+    const double size
 ) {
-    // get one val Gamma distribution
-    std::gamma_distribution<double> G {1/c, 1/pow(beta, c)};
-    std::vector<double> arr;
-    for (size_t index = 0; index < size; ++index) {
-        size_t Bnl_res = BnlDstrb_single_val();
-        double E = pow(G(rng),1/c);
-        if (Bnl_res == 1)
-            arr.push_back(E);
-        else
-            arr.push_back(-E);
+	std::exponential_distribution<double> distribution(1.0);
+	std::vector<double> to_ret;
+    for (int i = 0; i < size; ++i)
+		to_ret.push_back(distribution(rng));
+
+	srand((unsigned)time(0));
+	for (int i = 0; i < size; i++)
+        to_ret[i] = (rand() % 2 ? to_ret[i] : -to_ret[i]);
+	return to_ret;
+}
+
+std::vector<double> GGD05(
+    const double size
+) {
+	std::vector<double> num1, num2;
+	std::exponential_distribution<double> distribution(1.0);
+
+	for (int i = 0; i < size; ++i)
+        num1.push_back(distribution(rng));
+	for (int i = 0; i < size; ++i)
+		num2.push_back(distribution(rng));
+
+    std::vector<double> to_ret;
+	srand((int)1);
+	for (int i = 0; i < size; i++) {
+		double tmp = pow(num1[i] + num2[i], 2);
+		to_ret.push_back(rand() % 2 ? tmp : -tmp);
+	}
+	return to_ret;
+}
+
+/**
+ * @brief 产生高斯分布
+ * @param mean: double，平均值
+ * @param sigma: double，标准差
+ * @param size: 产生数量
+ * @return vector<double> 一个高斯分布的 vector
+ */
+std::vector<double> GD_vector(
+    double mean,
+    double sigma,
+    size_t size
+) {
+    std::normal_distribution<double> G { mean, sigma };
+    std::vector<double> to_ret;
+    for (size_t cnt = 0; cnt < size; cnt++) {
+        double Guass_val = G(rng);
+        to_ret.push_back(Guass_val);
     }
-    return arr;
+    return to_ret;
 }
