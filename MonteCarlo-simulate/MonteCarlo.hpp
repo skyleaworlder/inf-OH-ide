@@ -137,15 +137,14 @@ double calcuPsiTheory(
 );
 
 /**
- * @brief Q(x) = \int_x^{+\inf} \frac{1}{\sqrt{2\pi}} exp(-t^2 / 2) dt
- *          Q(x) = erfc(x) / 2
+ * @brief Q(x) = erfc(x / sqrt(2)) / 2
  * @param x: double，输入
  * @return Q(x)
  */
 inline double Q(const double x) {
     //std::cout << x << '\n';
     // x \in (-\inf, +\inf), y \in (0, 1)
-    return erfc(x) / 2.0;
+    return erfc(x / sqrt(2)) / 2.0;
 }
 
 /**
@@ -157,12 +156,7 @@ inline double iQ(const double x) {
     //std::cout << x << '\n';
     // x \in (0, 1), y \in (-\inf, +\inf)
     assert(x > -0.01 && x < 1.01);
-/**
- *    Q(x) = erfc(x) / 2, efrc(iefrc(x)) = x
- * => 2Q(iefrc(x)) = x => Q(iefrc(x)) = x/2 => iefrc(x) = Q^{-1}(x/2)
- * => Q^{-1}(x) = iefrc(2*x)
- */
-    return ierfc(x*2.0);
+    return sqrt(2) * ierfc(x*2.0);
 }
 
 MC_NP_END
