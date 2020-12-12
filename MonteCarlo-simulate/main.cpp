@@ -205,17 +205,18 @@ void lab_2_2_2() {
         1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1
     };
 
-    // 通过理论误检率计算理论阈值
     std::vector<double> psi_arr;
+    std::vector<double> pm_theory_arr;
+
+    std::cout << "STD_voice = 2.5:\n";
+    // 通过理论误检率计算理论阈值
     for (const double& pfa_theory : pfa_theory_arr)
         psi_arr.push_back(MC::calcuPsiTheory(STD, pfa_theory, N));
 
     // 通过理论阈值求漏检率
-    std::vector<double> pm_theory_arr;
     for (const double& pfa_theory : pfa_theory_arr)
-        pm_theory_arr.push_back(MC::calcuPmTheory(pfa_theory, N, a, STD));
+        pm_theory_arr.push_back(MC::calcuPmTheory(pfa_theory, N, a, sqrt(STD*STD+2.5*2.5)));
 
-    std::cout << "STD_voice = 2.5:\n";
     std::vector<double> experiment_pm_dot_2_5;
     std::vector<double> experiment_pfa_dot_2_5;
     for (size_t level = 0; level < pfa_theory_arr.size(); level++) {
@@ -242,8 +243,19 @@ void lab_2_2_2() {
         experiment_pm_dot_2_5.push_back(pm_cnt / static_cast<double>(iter_num));
         experiment_pfa_dot_2_5.push_back(pfa_cnt / static_cast<double>(iter_num));
     }
+    psi_arr.clear();
+    pm_theory_arr.clear();
+
 
     std::cout << "STD_voice = 5.0:\n";
+    // 通过理论误检率计算理论阈值
+    for (const double& pfa_theory : pfa_theory_arr)
+        psi_arr.push_back(MC::calcuPsiTheory(STD, pfa_theory, N));
+
+    // 通过理论阈值求漏检率
+    for (const double& pfa_theory : pfa_theory_arr)
+        pm_theory_arr.push_back(MC::calcuPmTheory(pfa_theory, N, a, sqrt(STD*STD+5.0*5.0)));
+
     std::vector<double> experiment_pm_dot_5_0;
     std::vector<double> experiment_pfa_dot_5_0;
     for (size_t level = 0; level < pfa_theory_arr.size(); level++) {
