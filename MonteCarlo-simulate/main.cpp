@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-void lab_2_2_1() {
+void lab_2_2_1_1() {
     // 均值
     double mean = 0;
     // 标准差
@@ -23,23 +23,13 @@ void lab_2_2_1() {
 
     // 根据理论 sigma 和理论 pfa 计算理论阈值
     std::vector<double> psi_c_2_0;
-    std::vector<double> psi_c_1_0;
-    std::vector<double> psi_c_0_5;
-    for (const double& pfa_theory : pfa_theory_arr) {
+    for (const double& pfa_theory : pfa_theory_arr)
         psi_c_2_0.push_back(MC::calcuPsiTheory(STD, pfa_theory, N));
-        psi_c_1_0.push_back(MC::calcuPsiTheory(STD, pfa_theory, N));
-        psi_c_0_5.push_back(MC::calcuPsiTheory(STD, pfa_theory, N));
-    }
 
     // 计算理论漏检率
     std::vector<double> pm_c_2_0;
-    std::vector<double> pm_c_1_0;
-    std::vector<double> pm_c_0_5;
-    for (const double& pfa_theory : pfa_theory_arr) {
+    for (const double& pfa_theory : pfa_theory_arr)
         pm_c_2_0.push_back(MC::calcuPmTheory(pfa_theory, N, a, STD));
-        pm_c_1_0.push_back(MC::calcuPmTheory(pfa_theory, N, a, STD));
-        pm_c_0_5.push_back(MC::calcuPmTheory(pfa_theory, N, a, STD));
-    }
 
     // 无攻击情况，c = 2.0
     // 嵌入强度 a = 1.8
@@ -48,8 +38,6 @@ void lab_2_2_1() {
     std::vector<double> experiment_pfa_dot_2_0;
     // 7 个太慢了，现在只是 6 个
     for (size_t level = 0; level < pfa_theory_arr.size(); level++) {
-        const double a = 1.8;
-        const size_t N = 1000;
         const size_t iter_num = 100000;
         size_t pm_cnt = 0;
         size_t pfa_cnt = 0;
@@ -108,6 +96,34 @@ void lab_2_2_1() {
         std::cout << elem << " ";
     std::cout << std::endl;
     */
+}
+
+void lab_2_2_1_2() {
+    // 均值
+    const double mean = 0;
+    // 标准差
+    const double STD = 10.0;
+
+    // 嵌入强度
+    const double a = 1.8;
+    // 每次的样本数量
+    const size_t N = 1000;
+
+    // 理论误检率
+    const std::vector<double> pfa_theory_arr {
+        1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1
+    };
+
+    // 根据理论 sigma 和理论 pfa 计算理论阈值
+    std::vector<double> psi_c_1_0;
+    for (const double& pfa_theory : pfa_theory_arr)
+        psi_c_1_0.push_back(MC::calcuPsiTheory(STD, pfa_theory, N));
+
+    // 计算理论漏检率
+    std::vector<double> pm_c_1_0;
+    for (const double& pfa_theory : pfa_theory_arr)
+        pm_c_1_0.push_back(MC::calcuPmTheory(pfa_theory, N, a, STD));
+
 
     // 无攻击情况，c = 1.0
     // 嵌入强度 a = 1.8
@@ -115,8 +131,6 @@ void lab_2_2_1() {
     std::vector<double> experiment_pm_dot_1_0;
     std::vector<double> experiment_pfa_dot_1_0;
     for (size_t level = 0; level < pfa_theory_arr.size(); level++) {
-        const double a = 1.8;
-        const size_t N = 1000;
         const size_t iter_num = 100000;
         size_t pm_cnt = 0;
         size_t pfa_cnt = 0;
@@ -136,6 +150,33 @@ void lab_2_2_1() {
         experiment_pm_dot_1_0.push_back(pm_cnt / static_cast<double>(iter_num));
         experiment_pfa_dot_1_0.push_back(pfa_cnt / static_cast<double>(iter_num));
     }
+}
+
+void lab_2_2_1_3() {
+    // 均值
+    const double mean = 0;
+    // 标准差
+    const double STD = 10.0;
+
+    // 嵌入强度
+    const double a = 1.8;
+    // 每次的样本数量
+    const size_t N = 1000;
+
+    // 理论误检率
+    const std::vector<double> pfa_theory_arr {
+        1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1
+    };
+
+    // 根据理论 sigma 和理论 pfa 计算理论阈值
+    std::vector<double> psi_c_0_5;
+    for (const double& pfa_theory : pfa_theory_arr)
+        psi_c_0_5.push_back(MC::calcuPsiTheory(STD, pfa_theory, N));
+
+    // 计算理论漏检率
+    std::vector<double> pm_c_0_5;
+    for (const double& pfa_theory : pfa_theory_arr)
+        pm_c_0_5.push_back(MC::calcuPmTheory(pfa_theory, N, a, STD));
 
     // 无攻击情况，c = 0.5
     // 嵌入强度 a = 1.8
@@ -143,8 +184,6 @@ void lab_2_2_1() {
     std::vector<double> experiment_pm_dot_0_5;
     std::vector<double> experiment_pfa_dot_0_5;
     for (size_t level = 0; level < pfa_theory_arr.size(); level++) {
-        const double a = 1.8;
-        const size_t N = 1000;
         const size_t iter_num = 100000;
         size_t pm_cnt = 0;
         size_t pfa_cnt = 0;
@@ -164,6 +203,33 @@ void lab_2_2_1() {
         experiment_pm_dot_0_5.push_back(pm_cnt / static_cast<double>(iter_num));
         experiment_pfa_dot_0_5.push_back(pfa_cnt / static_cast<double>(iter_num));
     }
+}
+
+void lab_2_2_1_4() {
+    // 均值
+    const double mean = 0;
+    // 标准差
+    const double STD = 10.0;
+
+    // 嵌入强度
+    const double a = 1.5;
+    // 每次的样本数量
+    const size_t N = 1000;
+
+    // 理论误检率
+    const std::vector<double> pfa_theory_arr {
+        1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1
+    };
+
+    // 根据理论 sigma 和理论 pfa 计算理论阈值
+    std::vector<double> psi_c_2_0;
+    for (const double& pfa_theory : pfa_theory_arr)
+        psi_c_2_0.push_back(MC::calcuPsiTheory(STD, pfa_theory, N));
+
+    // 计算理论漏检率
+    std::vector<double> pm_c_2_0;
+    for (const double& pfa_theory : pfa_theory_arr)
+        pm_c_2_0.push_back(MC::calcuPmTheory(pfa_theory, N, a, STD));
 
     // 无攻击情况，c = 2.0
     // 嵌入强度 a = 1.5
@@ -172,8 +238,6 @@ void lab_2_2_1() {
     std::vector<double> experiment_pfa_dot_2_0_new;
     // 7 个太慢了，现在只是 6 个
     for (size_t level = 0; level < pfa_theory_arr.size(); level++) {
-        const double a = 1.5;
-        const size_t N = 1000;
         const size_t iter_num = 100000;
         size_t pm_cnt = 0;
         size_t pfa_cnt = 0;
@@ -195,8 +259,10 @@ void lab_2_2_1() {
     }
 }
 
-void lab_2_2_2() {
+void lab_2_2_2_1() {
     const double STD = 10;
+    const double mean_voice = 0;
+    const double STD_voice = 2.5;
     const size_t N = 1000;
     const double a = 1.8;
 
@@ -220,15 +286,13 @@ void lab_2_2_2() {
     std::vector<double> experiment_pm_dot_2_5;
     std::vector<double> experiment_pfa_dot_2_5;
     for (size_t level = 0; level < pfa_theory_arr.size(); level++) {
-        const double mean = 0;
-        const double STD_voice = 2.5;
         const size_t iter_num = 10000;
         size_t pm_cnt = 0;
         size_t pfa_cnt = 0;
 
         for (size_t index = 0; index < iter_num; index++) {
             // 生成宿主容器
-            std::vector<double> GD_host { GD_vector(mean, STD, N) };
+            std::vector<double> GD_host { GD_vector(mean_voice, STD, N) };
 
             // 初始化 MonteCarlo 对象
             MC::MonteCarlo GD_2_5(GD_host);
@@ -243,9 +307,22 @@ void lab_2_2_2() {
         experiment_pm_dot_2_5.push_back(pm_cnt / static_cast<double>(iter_num));
         experiment_pfa_dot_2_5.push_back(pfa_cnt / static_cast<double>(iter_num));
     }
-    psi_arr.clear();
-    pm_theory_arr.clear();
+}
 
+void lab_2_2_2_2() {
+    const double STD = 10;
+    const double mean_voice = 0;
+    const double STD_voice = 5.0;
+    const size_t N = 1000;
+    const double a = 1.8;
+
+    // 理论误检率
+    const std::vector<double> pfa_theory_arr {
+        1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1
+    };
+
+    std::vector<double> psi_arr;
+    std::vector<double> pm_theory_arr;
 
     std::cout << "STD_voice = 5.0:\n";
     // 通过理论误检率计算理论阈值
@@ -259,15 +336,13 @@ void lab_2_2_2() {
     std::vector<double> experiment_pm_dot_5_0;
     std::vector<double> experiment_pfa_dot_5_0;
     for (size_t level = 0; level < pfa_theory_arr.size(); level++) {
-        const double mean = 0;
-        const double STD_voice = 5.0;
         const size_t iter_num = 10000;
         size_t pm_cnt = 0;
         size_t pfa_cnt = 0;
 
         for (size_t index = 0; index < iter_num; index++) {
             // 生成宿主容器
-            std::vector<double> GD_host { GD_vector(mean, STD, N) };
+            std::vector<double> GD_host { GD_vector(mean_voice, STD, N) };
 
             // 初始化 MonteCarlo 对象
             MC::MonteCarlo GD_5_0(GD_host);
@@ -285,6 +360,5 @@ void lab_2_2_2() {
 }
 
 int main() {
-    //lab_2_2_1();
-    //lab_2_2_2();
+    lab_2_2_1_1();
 }
