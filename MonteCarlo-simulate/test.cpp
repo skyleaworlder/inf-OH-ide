@@ -1,6 +1,6 @@
 #include "random_gen.hpp"
 #include "iefrc.hpp"
-#include "montecarlo.hpp"
+#include "MonteCarlo.hpp"
 
 #include <iostream>
 #include <vector>
@@ -67,9 +67,13 @@ void test_pfa_pm() {
         cout << elem << " ";
 }
 
+#ifdef DEBUG_TEST
+
 int main() {
     //test_imbed();
     //test_variance();
     //test_Q();
     test_pfa_pm();
 }
+
+#endif //DEBUG_TEST

@@ -1,6 +1,6 @@
 #include "random_gen.hpp"
 #include "iefrc.hpp"
-#include "montecarlo.hpp"
+#include "MonteCarlo.hpp"
 
 #include <iostream>
 #include <vector>
@@ -16,7 +16,10 @@
 void lab_2_2_1(
     std::vector<double>(*func)(const double size),
     std::ostream& out,
-    size_t iter_num=10000, double a=1.8, double STD=10.0, size_t N=1000
+    double a=1.8,
+    size_t iter_num=10000,
+    double STD=10.0,
+    size_t N=1000
 ) {
 
     // 理论误检率
@@ -24,15 +27,14 @@ void lab_2_2_1(
         1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1
     };
 
-    // 根据理论 sigma 和理论 pfa 计算理论阈值
-    std::vector<double> psi_c;
-    for (const double& pfa_theory : pfa_theory_arr)
-        psi_c.push_back(MC::calcuPsiTheory(STD, pfa_theory, N));
-
-    // 计算理论漏检率
+    std::vector<double> psiVector;
     std::vector<double> pm_c;
-    for (const double& pfa_theory : pfa_theory_arr)
+    for (const double& pfa_theory : pfa_theory_arr) {
+        // 根据理论 sigma 和理论 pfa 计算理论阈值
+        psiVector.push_back(MC::calcuPsiTheory(STD, pfa_theory, N));
+        // 计算理论漏检率
         pm_c.push_back(MC::calcuPmTheory(pfa_theory, N, a, STD));
+    }
 
     // 无攻击情况，c = 2.0
     // 嵌入强度 a = 1.8
@@ -40,13 +42,13 @@ void lab_2_2_1(
     std::vector<double> experiment_pm_dot;
     std::vector<double> experiment_pfa_dot;
     // 7 个太慢了，现在只是 6 个
-    for (size_t level = 0; level < pfa_theory_arr.size(); level++) {
+    for (size_t i = 0; i < pfa_theory_arr.size(); i++) {
         size_t pm_cnt = 0;
         size_t pfa_cnt = 0;
 
         // test_cnt < 1e6，因为题目要求误差在 1e-6 以下
         // 但是 1e6 太慢了
-        for (size_t test_cnt = 0; test_cnt < iter_num; test_cnt++) {
+        for (size_t j = 0; j < iter_num; j++) {
             std::vector<double> X_MtClo { func(N) };
 
             // 初始化 MonteCarlo 对象
@@ -55,11 +57,11 @@ void lab_2_2_1(
             MtClo.genLinearCorrelator();
 
             // 根据实验值进行检验
-            pm_cnt += MtClo.isMiss(psi_c[level]);
-            pfa_cnt += MtClo.isFalseAlarm(psi_c[level]);
-            if (test_cnt % 1000 == 0) {
-                out << "cnt: " << test_cnt << " ";
-                out << "psi_c: " << psi_c[level] << " ";
+            pm_cnt += MtClo.isMiss(psiVector[i]);
+            pfa_cnt += MtClo.isFalseAlarm(psiVector[i]);
+            if (j % 1000 == 0) {
+                out << "cnt: " << j << " ";
+                out << "psiVector: " << psiVector[i] << " ";
                 out << "LS1 / LS0: " << MtClo.L_S_H1 << "/" << MtClo.L_S_H0<< " ";
                 out << "\n";
             }
@@ -83,8 +85,8 @@ void lab_2_2_1(
     for (const double& elem : pfa_theory_arr)
         out << elem << " ";
     out << '\n';
-    out << "psi: ";
-    for (const double& elem : psi_c)
+    out << "psiVector: ";
+    for (const double& elem : psiVector)
         out << elem << " ";
     out << '\n';
 
@@ -199,6 +201,7 @@ void lab_2_2_2_2() {
         experiment_pfa_dot_5_0.push_back(pfa_cnt / static_cast<double>(iter_num));
     }
 }
+#ifndef DEBUG_TEST
 
 int main() {
     std::ofstream out_c20_a18("./data/c20_a18.txt");
@@ -214,3 +217,5 @@ int main() {
     out_c20_a18.close();
     out_c20_a15.close();
 }
+
+#endif // !DEBUG_TEST

@@ -1,4 +1,4 @@
-#include "montecarlo.hpp"
+#include "MonteCarlo.hpp"
 
 const std::array<int, 2> MC::MonteCarlo::w { 1, -1 };
 
