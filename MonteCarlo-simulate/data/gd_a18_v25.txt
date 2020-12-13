@@ -1,0 +1,86 @@
+cnt: 0 psi_theory_arr: 1.50316 LS1 / LS0: 1.58222/-0.379377 
+cnt: 1000 psi_theory_arr: -11.4198 LS1 / LS0: 1.67362/-0.166929 
+cnt: 2000 psi_theory_arr: -13.6425 LS1 / LS0: 1.7906/-0.0709922 
+cnt: 3000 psi_theory_arr: -9.09819 LS1 / LS0: 2.62569/0.766787 
+cnt: 4000 psi_theory_arr: -0.935462 LS1 / LS0: 1.85795/0.234848 
+cnt: 5000 psi_theory_arr: 4.98235 LS1 / LS0: 1.77712/-0.0326851 
+cnt: 6000 psi_theory_arr: 1.24181 LS1 / LS0: 2.50768/0.544963 
+cnt: 7000 psi_theory_arr: 2.07676 LS1 / LS0: 2.41353/0.675165 
+cnt: 8000 psi_theory_arr: -1.46979 LS1 / LS0: 1.67886/0.000271506 
+cnt: 9000 psi_theory_arr: 0 LS1 / LS0: 2.4129/0.514883 
+experimental:
+(1808, 10000)
+(0, 10000)
+cnt: 0 psi_theory_arr: 1.50316 LS1 / LS0: 1.91897/0.225324 
+cnt: 1000 psi_theory_arr: -2.24392 LS1 / LS0: 1.89883/0.0595793 
+cnt: 2000 psi_theory_arr: -13.6425 LS1 / LS0: 1.65786/-0.185899 
+cnt: 3000 psi_theory_arr: 8.60485 LS1 / LS0: 2.14741/0.366138 
+cnt: 4000 psi_theory_arr: -0.935462 LS1 / LS0: 2.37476/0.51745 
+cnt: 5000 psi_theory_arr: -8.10758 LS1 / LS0: 1.83734/-0.0388367 
+cnt: 6000 psi_theory_arr: -14.8349 LS1 / LS0: 0.959303/-0.686032 
+cnt: 7000 psi_theory_arr: -0.72442 LS1 / LS0: 1.78394/0.030337 
+cnt: 8000 psi_theory_arr: -1.89852 LS1 / LS0: 1.31032/-0.346488 
+cnt: 9000 psi_theory_arr: 0 LS1 / LS0: 2.13382/0.463885 
+experimental:
+(792, 10000)
+(0, 10000)
+cnt: 0 psi_theory_arr: 1.50316 LS1 / LS0: 2.04896/0.122173 
+cnt: 1000 psi_theory_arr: -2.24392 LS1 / LS0: 1.39901/-0.440337 
+cnt: 2000 psi_theory_arr: -13.6425 LS1 / LS0: 2.22913/0.246556 
+cnt: 3000 psi_theory_arr: -3.24412 LS1 / LS0: 1.86376/0.043995 
+cnt: 4000 psi_theory_arr: -0.935462 LS1 / LS0: 1.48069/-0.311952 
+cnt: 5000 psi_theory_arr: 6.5011 LS1 / LS0: 1.86888/0.139259 
+cnt: 6000 psi_theory_arr: -8.81033 LS1 / LS0: 2.0338/0.258667 
+cnt: 7000 psi_theory_arr: 1.85783 LS1 / LS0: 2.0605/0.371102 
+cnt: 8000 psi_theory_arr: -6.49246 LS1 / LS0: 1.8837/-0.0665645 
+cnt: 9000 psi_theory_arr: 0 LS1 / LS0: 0.962116/-0.943511 
+experimental:
+(257, 10000)
+(2, 10000)
+cnt: 0 psi_theory_arr: 1.50316 LS1 / LS0: 1.93254/0.183594 
+cnt: 1000 psi_theory_arr: -2.24392 LS1 / LS0: 1.47199/-0.430925 
+cnt: 2000 psi_theory_arr: -13.6425 LS1 / LS0: 1.66792/-0.0971307 
+cnt: 3000 psi_theory_arr: 0.381622 LS1 / LS0: 1.05894/-0.703802 
+cnt: 4000 psi_theory_arr: -0.935462 LS1 / LS0: 1.67605/0.00894894 
+cnt: 5000 psi_theory_arr: -4.93977 LS1 / LS0: 2.0793/0.43786 
+cnt: 6000 psi_theory_arr: 2.97166 LS1 / LS0: 1.74527/-0.0237427 
+cnt: 7000 psi_theory_arr: 3.05298 LS1 / LS0: 1.58847/-0.095363 
+cnt: 8000 psi_theory_arr: 1.99024 LS1 / LS0: 1.16466/-0.702882 
+cnt: 9000 psi_theory_arr: 0 LS1 / LS0: 1.97584/0.148146 
+experimental:
+(64, 10000)
+(14, 10000)
+cnt: 0 psi_theory_arr: 1.50316 LS1 / LS0: 1.52336/-0.226237 
+cnt: 1000 psi_theory_arr: -2.24392 LS1 / LS0: 1.86446/0.226661 
+cnt: 2000 psi_theory_arr: -13.6425 LS1 / LS0: 1.80788/-0.015788 
+cnt: 3000 psi_theory_arr: -2.42017 LS1 / LS0: 1.68931/-0.392497 
+cnt: 4000 psi_theory_arr: -0.935462 LS1 / LS0: 1.18247/-0.628287 
+cnt: 5000 psi_theory_arr: 18.3312 LS1 / LS0: 1.29858/-0.492192 
+cnt: 6000 psi_theory_arr: 0.926809 LS1 / LS0: 1.84035/0.102537 
+cnt: 7000 psi_theory_arr: 3.71356 LS1 / LS0: 1.95713/0.2988 
+cnt: 8000 psi_theory_arr: 12.0091 LS1 / LS0: 1.70036/0.0377899 
+cnt: 9000 psi_theory_arr: 0 LS1 / LS0: 2.38557/0.789964 
+experimental:
+(9, 10000)
+(96, 10000)
+cnt: 0 psi_theory_arr: 1.50316 LS1 / LS0: 1.92788/0.103957 
+cnt: 1000 psi_theory_arr: -2.24392 LS1 / LS0: 1.7893/0.0279685 
+cnt: 2000 psi_theory_arr: -13.6425 LS1 / LS0: 1.75211/-0.03307 
+cnt: 3000 psi_theory_arr: -0.923301 LS1 / LS0: 1.44702/-0.464786 
+cnt: 4000 psi_theory_arr: -0.935462 LS1 / LS0: 2.37039/0.502306 
+cnt: 5000 psi_theory_arr: -4.19721 LS1 / LS0: 2.28121/0.50012 
+cnt: 6000 psi_theory_arr: 18.2711 LS1 / LS0: 1.84858/-0.0605653 
+cnt: 7000 psi_theory_arr: 5.10664 LS1 / LS0: 1.76972/-0.00935512 
+cnt: 8000 psi_theory_arr: -6.74327 LS1 / LS0: 1.53071/-0.350989 
+cnt: 9000 psi_theory_arr: 0 LS1 / LS0: 2.17354/0.383497 
+experimental:
+(0, 10000)
+(1101, 10000)
+thoeritical:
+pm:0.221029 0.10433 0.0356838 0.0075096 0.000697219 1.11463e-05 
+pfa:1e-06 1e-05 0.0001 0.001 0.01 0.1 
+psi_theory_arr: 1.50316 1.34868 1.17606 0.977217 0.735656 0.405262 
+pm, when STD = 10:
+0.1808 0.0792 0.0257 0.0064 0.0009 0 
+pfa, when STD = 10:
+0 0 0.0002 0.0014 0.0096 0.1101 
