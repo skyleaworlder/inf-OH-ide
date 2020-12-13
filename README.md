@@ -11,5 +11,4 @@
 
 * [伪随机数生成](https://github.com/skyleaworlder/inf-OH-ide/tree/main/Pseudo-rand)；
 * 扩频水印（等待完善）；
-* 蒙特卡洛仿真（等待完善）...
-
+* [蒙特卡洛仿真](https://github.com/skyleaworlder/inf-OH-ide/tree/main/MonteCarlo-simulate)；
