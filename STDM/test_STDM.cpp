@@ -1,11 +1,11 @@
 #include "STDM.hpp"
-#include "bmp.hpp"
 
 std::string lena_path = "LENA.BMP";
 std::string logo_path = "LOGO.BMP";
 const size_t lena_size = STDM::pic_width * STDM::pic_height;
 const size_t logo_size = STDM::logo_width * STDM::logo_height;
 
+/*
 void test_imbed() {
     STDM stdm(1);
 
@@ -16,7 +16,9 @@ void test_imbed() {
     for (int i = 0; i < 64; i++)
         std::cout << b[i] << " ";
 }
+*/
 
+/*
 void test_decode() {
     STDM stdm(4);
 
@@ -30,6 +32,7 @@ void test_decode() {
     std::cout << std::endl;
     std::cout << stdm.decode(b) << std::endl;
 }
+*/
 
 void test_imbedAll() {
     BMP bmp_lena, bmp_logo;
@@ -97,7 +100,7 @@ void test_decodeAll() {
     u_char* logo_out_uchar = new u_char[logo_size];
     for (size_t idx = 0; idx < lena_size; ++idx)
         lena_out_uchar[idx] = lena_out[idx];
-    stdm.int2UChar(logo_out, logo_out_uchar);
+    int2UChar(logo_out, logo_size, logo_out_uchar);
 
     std::string lena_out_path = "LENA-bak.BMP";
     bmp_lena.BMP_write(
