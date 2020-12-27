@@ -81,14 +81,19 @@ void BMP::BMP_write(
     fwrite(&info_hdr, sizeof(BITMAPINFOHEADER), 1, fp_out);
 
     // 有关 color_table 的写入
-    if (bitPerPixel == 8)
+    // 仅针对二值和灰度
+    if (bitPerPixel == 8) {
         fwrite(color_tablePtr, sizeof(RGBQUAD), 256, fp_out);
-    else if (bitPerPixel == 1)
+        fwrite(img_data, width * height, 1, fp_out);
+    }
+    else if (bitPerPixel == 1) {
         fwrite(color_tablePtr, sizeof(RGBQUAD), 2, fp_out);
+        fwrite(img_data, width * height / 8, 1, fp_out);
+    }
     else
         ;
 
-    fwrite(img_data, width * height, 1, fp_out);
+    std::cout << width << " " << height<< std::endl;
     fclose(fp_out);
 
     std::cout << "end..." << std::endl;
