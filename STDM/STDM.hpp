@@ -1,38 +1,30 @@
+#include "DCT.hpp"
+
+#include <iostream>
 #include <Windows.h>
 #include <vector>
 #include <array>
 #include <cassert>
 #include <algorithm>
+#include <cmath>
 
 class STDM {
+
 public:
-    static const int w[2];
     static const int pic_width;
     static const int pic_height;
     static const int logo_width;
     static const int logo_height;
 
-    // 按道理在这里是 512*512
-    double* pic_data;
-    double* pic_data_imbed;
-    // logo 按道理是 64*64
-    int* logo_data;
-    int* logo_decode_data;
-
-    // pic_buf 也应该是 512*512
-    u_char* pic_buf;
-    // logo_buf 其实本来应该是 64*64，但由于是二值图像，所以为 64*64/8=512
-    u_char* logo_buf;
-
     // 就是那个三角
     double delta;
 
 public:
-    STDM();
-    ~STDM();
-    void imbedAll(double* pic_inp, double* pic_imbed_inp, int* logo_inp);
+    STDM(double delta): delta(delta) {};
+    ~STDM() {};
+    void imbedAll(double* pic_inp, double* pic_imbed_out, int* logo_inp);
     void imbed(double block_inp[64], double block_out[64], int b);
-    void decodeAll(double* pic_imbed_inp, int* logo_inp);
+    void decodeAll(double* pic_imbed_inp, int* logo_out);
     bool decode(double block_inp[64]);
 
     double calcuPfa(int* logo_origin, int* logo_decode);
@@ -59,5 +51,5 @@ public:
 
     std::vector<double> _getZigZagSlash(std::array<std::array<double, 8>, 8> input, const size_t zig_num);
     std::array<std::array<double, 8>, 8> _vector2Array(std::vector<double> input);
-    std::vector<double> STDM::_array2Vector(std::array<std::array<double, 8>, 8> input) {
+    std::vector<double> _array2Vector(std::array<std::array<double, 8>, 8> input);
 };
