@@ -69,15 +69,6 @@ std::vector<double> DCT::DCT_inverse(
     std::vector<double> C, R;
     std::vector<double> Q { DCT::Quant_matrix_gen(q_level) };
 
-    // generate C
-    assert(D.size() == N*N && Q.size() == N*N);
-    for (size_t index = 0; index < N*N; ++index)
-        C.push_back(DCT::round(D[index] / Q[index], false));
-
-    // generate R
-    for (size_t index = 0; index < N*N; ++index)
-        R.push_back(DCT::round(Q[index] * C[index], false));
-
     // generate T and T'
     std::pair<
         std::vector<double>,
@@ -85,13 +76,13 @@ std::vector<double> DCT::DCT_inverse(
     > T_Tp { DCT::T_matrix_gen(N) };
     std::vector<double> T { T_Tp.first }, Tp { T_Tp.second };
     std::vector<double> mult_res { DCT::Mult_square_matrix(
-        DCT::Mult_square_matrix(Tp, R), T
+        DCT::Mult_square_matrix(Tp, D), T
     )};
 
-    // round() and +128
+    // round() and unsigned
     std::vector<double> ret;
     for (double elem : mult_res)
-        ret.push_back(DCT::round(elem, false) + 128);
+        ret.push_back(DCT::round(elem, true));
 
     return ret;
 }
