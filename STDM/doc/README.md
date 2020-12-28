@@ -28,13 +28,18 @@ $$
 \begin{matrix}
     s_i = x_i + aw_i \\
     \\
+    \\
     s_i w_i = x_i w_i + a \\
     \\
-    \sum_{i=1}^N s_i w_i = \sum_{i=1}^N x_i w_i + Na\\
+    \\
+    \sum_{i=1}^N s_i w_i = \sum_{i=1}^N x_i w_i + Na \\
+    \\
     \\
     \dfrac{1}{N} \sum_{i=1}^N s_i w_i = \dfrac{1}{N} \sum_{i=1}^N x_i w_i + a \\
     \\
+    \\
     \bar{s} = \bar{x} + a \\
+    \\
     \\
     s_i = x_i + (\bar{s} - \bar{x}) w_i
 \end{matrix}
