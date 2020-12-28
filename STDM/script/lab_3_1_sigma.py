@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from DP_utils import Data_Process_1
 
-f = open("./voice_STDM_sigma.txt")
+f = open("../data/voice_STDM_sigma.txt", "r")
 records = f.readlines()
 records = [elem.strip('\n') for elem in records]
 

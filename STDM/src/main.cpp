@@ -17,8 +17,8 @@ void lab_3_1(
 
     // open pic & logo
     BMP bmp_lena, bmp_logo;
-    std::string lena_path = "./assets/LENA.BMP";
-    std::string logo_path = "./assets/LOGO.BMP";
+    std::string lena_path = "../assets/LENA.BMP";
+    std::string logo_path = "../assets/LOGO.BMP";
     bmp_lena.BMP_read(lena_path);
     bmp_logo.BMP_read(logo_path);
 
@@ -59,12 +59,12 @@ void lab_3_1(
     int2UChar(logo_out, STDM::logo_size, logo_out_uchar);
 
     // output
-    std::string lena_out_path = "./assets/LENA-bak.BMP";
+    std::string lena_out_path = "../assets/LENA-bak.BMP";
     bmp_lena.BMP_write(
         lena_out_path, lena_out_uchar,
         STDM::pic_width, STDM::pic_height, bmp_lena.bmp_bitPx
     );
-    std::string logo_decode_path = "./assets/LOGO-decode.BMP";
+    std::string logo_decode_path = "../assets/LOGO-decode.BMP";
     bmp_logo.BMP_write(
         logo_decode_path, logo_out_uchar,
         STDM::logo_width, STDM::logo_height, bmp_logo.bmp_bitPx
@@ -81,8 +81,8 @@ void lab_3_2(
 
     // open pic & logo
     BMP bmp_lena, bmp_logo;
-    std::string lena_path = "./assets/LENA.BMP";
-    std::string logo_path = "./assets/LOGO.BMP";
+    std::string lena_path = "../assets/LENA.BMP";
+    std::string logo_path = "../assets/LOGO.BMP";
     bmp_lena.BMP_read(lena_path);
     bmp_logo.BMP_read(logo_path);
 
@@ -120,12 +120,12 @@ void lab_3_2(
     int2UChar(logo_out, STDM::logo_size, logo_out_uchar);
 
     // output
-    std::string lena_out_path = "./assets/LENA-bak.BMP";
+    std::string lena_out_path = "../assets/LENA-bak.BMP";
     bmp_lena.BMP_write(
         lena_out_path, lena_out_uchar,
         STDM::pic_width, STDM::pic_height, bmp_lena.bmp_bitPx
     );
-    std::string logo_decode_path = "./assets/LOGO-decode.BMP";
+    std::string logo_decode_path = "../assets/LOGO-decode.BMP";
     bmp_logo.BMP_write(
         logo_decode_path, logo_out_uchar,
         STDM::logo_width, STDM::logo_height, bmp_logo.bmp_bitPx
@@ -157,7 +157,7 @@ int main() {
 
     switch (choice) {
     case 1:
-        out.open("./data/normal_STDM.txt");
+        out.open("../data/normal_STDM.txt");
         std::cout << "please input delta of STDM(type unsigned double): ";
         std::cin >> delta;
         assert(delta > 0);
@@ -166,7 +166,7 @@ int main() {
         break;
 
     case 2:
-        out.open("./data/voice_STDM.txt");
+        out.open("../data/voice_STDM.txt");
         std::cout << "please input delta of STDM(delta > 0): ";
         std::cin >> delta;
         assert(delta > 0);
@@ -179,7 +179,7 @@ int main() {
         break;
 
     case 3:
-        out.open("./data/voice_STDM_sigma.txt");
+        out.open("../data/voice_STDM_sigma.txt");
         std::cout << "please input num of pfa test(num > 0): ";
         std::cin >> test_num;
         assert(test_num > 0);
@@ -197,7 +197,7 @@ int main() {
         break;
 
     case 4:
-        out.open("./data/voice_STDM_delta.txt");
+        out.open("../data/voice_STDM_delta.txt");
         std::cout << "please input num of delta pfa test(num > 0): ";
         std::cin >> test_num;
         assert(test_num > 0);
@@ -215,7 +215,7 @@ int main() {
         break;
 
     case 5:
-        out.open("./data/jpeg_STDM.txt");
+        out.open("../data/jpeg_STDM.txt");
         std::cout << "please input delta of STDM(delta > 0): ";
         std::cin >> delta;
         assert(delta);
@@ -226,7 +226,7 @@ int main() {
         break;
 
     case 6:
-        out.open("./data/jpeg_STDM_q_level.txt");
+        out.open("../data/jpeg_STDM_q_level.txt");
         delta = 4;
         std::cout << "please input num of jpeg compressioni test(num > 0): ";
         std::cin >> test_num;

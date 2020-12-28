@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from DP_utils import Data_Process_2
 
-f = open("./jpeg_STDM_q_level.txt")
+f = open("../data/jpeg_STDM_q_level.txt")
 records = f.readlines()
 records = [elem.strip('\n') for elem in records]
 
