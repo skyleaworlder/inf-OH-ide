@@ -10,7 +10,7 @@
 /**
  * 获取伪 zig-zag 的工具函数，
  * 其实不需要实现真正的 zig-zag，只要去那几列就可以了
- * 如果想要使用真正的 zig-zag algorithm，可参照下方的 @see
+ * 如果想要使用真正的 zig-zag algorithm，可参照下方的 "see"
  * @name: getZigZagSlash
  * @see: https://gist.github.com/skyleaworlder/94ffd831e6cafbe694f10e1c2acbe650
  *          zig-zag implemented by skyleaworlder
