@@ -11,7 +11,10 @@ const int STDM::block_size = 64;
 std::random_device rd;
 std::mt19937_64 rng(rd());
 
-void STDM::imbedAll(double* pic_inp, double* pic_imbed_out, int* logo_inp) {
+void STDM::imbedAll(
+    double* pic_inp, double* pic_imbed_out, int* logo_inp,
+    const size_t zig_num, const size_t q_level, const bool is_jpeg
+) {
     const size_t block_byte_num = STDM::block_size * 8;
 
     size_t cnt = 0;
@@ -21,7 +24,7 @@ void STDM::imbedAll(double* pic_inp, double* pic_imbed_out, int* logo_inp) {
 
         // 使用 memcpy_s 是好的，可以使代码简洁（
         memcpy_s(imbed_inp, block_byte_num, (pic_inp+bias), block_byte_num);
-        this->imbed(imbed_inp, imbed_out, logo_inp[cnt]);
+        this->imbed(imbed_inp, imbed_out, logo_inp[cnt], zig_num, q_level, is_jpeg);
         memcpy_s((pic_imbed_out+bias), block_byte_num, imbed_out, block_byte_num);
 
         delete[] imbed_inp;
@@ -29,7 +32,10 @@ void STDM::imbedAll(double* pic_inp, double* pic_imbed_out, int* logo_inp) {
     }
 }
 
-void STDM::imbed(double block_inp[64], double block_out[64], int b, const size_t zig_num) {
+void STDM::imbed(
+    double block_inp[64], double block_out[64], int b,
+    const size_t zig_num, const size_t q_level, const bool is_jpeg
+) {
     // dct
     std::vector<double> block_vec { array2Vector<double>(block_inp, 64) };
     std::vector<double> block_dct { DCT::DCT(block_vec, 8) };
@@ -73,7 +79,7 @@ void STDM::imbed(double block_inp[64], double block_out[64], int b, const size_t
 
     // dct inverse
     std::vector<double> block_to_dct_inverse { array2Vector(block_dct_arr) };
-    std::vector<double> block_imbed { DCT::DCT_inverse(block_to_dct_inverse, 8) };
+    std::vector<double> block_imbed { DCT::DCT_inverse(block_to_dct_inverse, 8, q_level, is_jpeg) };
 
     vector2Array<double>(block_imbed, block_out);
 }
