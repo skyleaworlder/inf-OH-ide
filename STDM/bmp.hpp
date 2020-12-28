@@ -1,9 +1,10 @@
 #ifndef BMP_HPP
 #define BMP_HPP
 
-#include <Windows.h>
 #include <iostream>
 #include <string>
+
+#include <Windows.h>
 
 using BYTE = u_char;
 

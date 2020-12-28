@@ -10,7 +10,7 @@ void BMP::BMP_read(
         exit(EXIT_FAILURE);
     }
 
-    std::cout << "begin to read bmp file..." << std::endl;
+    //std::cout << "begin to read bmp file..." << std::endl;
     // get length of bmp file
     fseek(fp, 0, SEEK_END);
     size_t bmp_len = ftell(fp);
@@ -70,7 +70,7 @@ void BMP::BMP_write(
         exit(EXIT_FAILURE);
     }
 
-    std::cout << "begin write file..." << std::endl;
+    //std::cout << "begin write file..." << std::endl;
 
     // 有关 file_hdr 的写入
     BITMAPFILEHEADER file_hdr = this->bmp_hdr;
@@ -93,8 +93,8 @@ void BMP::BMP_write(
     else
         ;
 
-    std::cout << width << " " << height<< std::endl;
-    fclose(fp_out);
+    //std::cout << width << " " << height<< std::endl;
 
-    std::cout << "end..." << std::endl;
+    fclose(fp_out);
+    //std::cout << "end..." << std::endl;
 }
