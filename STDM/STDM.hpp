@@ -10,6 +10,7 @@
 #include <array>
 #include <cassert>
 #include <cmath>
+#include <random>
 
 #include <Windows.h>
 
@@ -99,6 +100,16 @@ public:
      * @param logo_inp: 类型为 int*，装 logo 的空间，需要首先分配
      */
     void decodeAll(double* pic_imbed_inp, int* logo_out);
+
+    /**
+     * 添加噪声
+     * @param data_inp: double* 被添加高斯噪声的空间
+     * @param data_out: double* 函数输出
+     * @param mean: const double, 均值
+     * @param sigma: const double, 标准差
+     * @param size: const size_t, 表示生成数据的大小
+     */
+    void addVoice(double* data_inp, double* data_out, const double mean, const double sigma, const size_t size);
 
     /**
      * 计算 pfa

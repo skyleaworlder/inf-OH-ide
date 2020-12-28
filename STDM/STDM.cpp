@@ -8,6 +8,9 @@ const int STDM::pic_size = 512*512;
 const int STDM::logo_size = 64*64;
 const int STDM::block_size = 64;
 
+std::random_device rd;
+std::mt19937_64 rng(rd());
+
 void STDM::imbedAll(double* pic_inp, double* pic_imbed_out, int* logo_inp) {
     const size_t block_byte_num = STDM::block_size * 8;
 
@@ -37,6 +40,7 @@ void STDM::imbed(double block_inp[64], double block_out[64], int b, const size_t
 
     // imbed
     // x_bar: projection of x
+    // 使用三目运算符构成的 +- 法代替乘法, 加快程序执行速度
     double x_bar, x_sum = 0;
     for (size_t idx = 0; idx < zig_zag_vec.size(); ++idx)
         x_sum += (idx % 2) ? -zig_zag_vec[idx] : zig_zag_vec[idx];
@@ -107,6 +111,12 @@ bool STDM::decode(double block_inp[64], const size_t zig_num) {
     // 都是按照 slides 上的公式走的
     double q_res = this->q_delta(this->delta, y_bar + (this->delta/4.0)) - (this->delta / 4.0);
     return (fabs(q_res - y_bar) >= this->delta / 4.0);
+}
+
+void STDM::addVoice(double* data_inp, double* data_out, const double mean, const double sigma, const size_t size) {
+    std::normal_distribution<double> G { mean, sigma };
+    for (size_t cnt = 0; cnt < size; ++cnt)
+        data_out[cnt] = data_inp[cnt] + G(rng);
 }
 
 double STDM::calcuPfa(int* logo_origin, int* logo_decode) {
