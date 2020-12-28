@@ -72,8 +72,8 @@ void test_mult() {
 }
 
 int main() {
-    test_DCT();
+    //test_DCT();
     //test_Q_gen();
-    //test_T_transpose();
+    test_T_transpose();
     //test_mult();
 }
