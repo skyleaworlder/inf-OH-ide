@@ -13,6 +13,28 @@ std::vector<double> DCT::Quant_matrix_50 = std::vector<double> {
         72, 92, 95, 98, 112,100,103,99
 };
 
+std::vector<double> DCT::T_matrix_8x8 {
+    0.353553,   0.353553,   0.353553,   0.353553,   0.353553,   0.353553,   0.353553,   0.353553,
+    0.490393,   0.415735,   0.277785,   0.0975452,  -0.0975452, -0.277785,  -0.415735,  -0.490393,
+    0.46194,    0.191342,   -0.191342,  -0.46194,   -0.46194,   -0.191342,  0.191342,   0.46194,
+    0.415735,   -0.0975452, -0.490393,  -0.277785,  0.277785,   0.490393,   0.0975452,  -0.415735,
+    0.353553,   -0.353553,  -0.353553,  0.353553,   0.353553,   -0.353553,  -0.353553,  0.353553,
+    0.277785,   -0.490393,  0.0975452,  0.415735,   -0.415735,  -0.0975452, 0.490393,   -0.277785,
+    0.191342,   -0.46194,   0.46194,    -0.191342,  -0.191342,  0.46194,    -0.46194,   0.191342,
+    0.0975452,  -0.277785,  0.415735,   -0.490393,  0.490393,   -0.415735,  0.277785,   -0.0975452
+};
+
+std::vector<double> DCT::T_tp_matrix_8x8 {
+    0.353553,   0.490393,   0.46194,    0.415735,   0.353553,   0.277785,   0.191342,   0.0975452,
+    0.353553,   0.415735,   0.191342,   -0.0975452, -0.353553,  -0.490393,  -0.46194,   -0.277785,
+    0.353553,   0.277785,   -0.191342,  -0.490393,  -0.353553,  0.0975452,  0.46194,    0.415735,
+    0.353553,   0.0975452,  -0.46194,   -0.277785,  0.353553,   0.415735,   -0.191342,  -0.490393,
+    0.353553,   -0.0975452, -0.46194,   0.277785,   0.353553,   -0.415735,  -0.191342,  0.490393,
+    0.353553,   -0.277785,  -0.191342,  0.490393,   -0.353553,  -0.0975452, 0.46194,    -0.415735,
+    0.353553,   -0.415735,  0.191342,   0.0975452,  -0.353553,  0.490393,   -0.46194,   0.277785,
+    0.353553,   -0.490393,  0.46194,    -0.415735,  0.353553,   -0.277785,  0.191342,   -0.0975452
+};
+
 /*
  * only able to process SQUARE
  * get D Matrix from M(pixel_arr) directly
@@ -64,19 +86,32 @@ std::vector<double> DCT::DCT(
 std::vector<double> DCT::DCT_inverse(
     std::vector<double> D,
     const size_t N,
-    size_t q_level
+    size_t q_level,
+    bool is_jpeg
 ) {
     std::vector<double> C, R;
     std::vector<double> Q { DCT::Quant_matrix_gen(q_level) };
 
     // generate T and T'
-    std::pair<
-        std::vector<double>,
-        std::vector<double>
-    > T_Tp { DCT::T_matrix_gen(N) };
+    auto T_Tp { DCT::T_matrix_gen(N) };
     std::vector<double> T { T_Tp.first }, Tp { T_Tp.second };
+
+    if (is_jpeg) {
+        // generate C
+        assert(D.size() == N*N && Q.size() == N*N);
+        for (size_t index = 0; index < N*N; ++index)
+            C.push_back(DCT::round(D[index] / Q[index], false));
+
+        // generate R
+        for (size_t index = 0; index < N*N; ++index)
+            R.push_back(DCT::round(Q[index] * C[index], false));
+    }
+
+    // 如果是 jpeg, 就要考虑中间的 R 矩阵生成
+    auto X { (is_jpeg) ? R : D };
+
     std::vector<double> mult_res { DCT::Mult_square_matrix(
-        DCT::Mult_square_matrix(Tp, D), T
+        DCT::Mult_square_matrix(Tp, X), T
     )};
 
     // round() and unsigned
@@ -122,8 +157,11 @@ std::vector<double> DCT::Quant_matrix_gen(size_t target_Q) {
     size_t S;
     if (target_Q < 50)
         S = 5000 / target_Q;
-    else
+    else if (target_Q > 50)
         S = 200 - 2*target_Q;
+    else
+        // 这里直接返回, 降低计算时间
+        return DCT::Quant_matrix_50;
 
     std::vector<double> ret;
     for (double elem : DCT::Quant_matrix_50) {
@@ -141,6 +179,9 @@ std::vector<double> DCT::Quant_matrix_gen(size_t target_Q) {
 std::pair<std::vector<double>, std::vector<double>> DCT::T_matrix_gen(
     const size_t N
 ) {
+    // 提前计算好的 T 与 T_tp, 缩短执行时间
+    if (N == 8)
+        return { DCT::T_matrix_8x8, DCT::T_tp_matrix_8x8 };
     /*
      * generate a 2-dim vector: T
      * to generate T' in accordance with programming requirements.
@@ -167,10 +208,7 @@ std::pair<std::vector<double>, std::vector<double>> DCT::T_matrix_gen(
             T_tp_ret.push_back(T[j][i]);
         }
 
-    return std::pair<
-            std::vector<double>,
-            std::vector<double>
-        > { T_ret, T_tp_ret };
+    return { T_ret, T_tp_ret };
 }
 
 /*
