@@ -17,8 +17,8 @@ void lab_3_1(
 
     // open pic & logo
     BMP bmp_lena, bmp_logo;
-    std::string lena_path = "LENA.BMP";
-    std::string logo_path = "LOGO.BMP";
+    std::string lena_path = "./assets/LENA.BMP";
+    std::string logo_path = "./assets/LOGO.BMP";
     bmp_lena.BMP_read(lena_path);
     bmp_logo.BMP_read(logo_path);
 
@@ -59,12 +59,12 @@ void lab_3_1(
     int2UChar(logo_out, STDM::logo_size, logo_out_uchar);
 
     // output
-    std::string lena_out_path = "LENA-bak.BMP";
+    std::string lena_out_path = "./assets/LENA-bak.BMP";
     bmp_lena.BMP_write(
         lena_out_path, lena_out_uchar,
         STDM::pic_width, STDM::pic_height, bmp_lena.bmp_bitPx
     );
-    std::string logo_decode_path = "LOGO-decode.BMP";
+    std::string logo_decode_path = "./assets/LOGO-decode.BMP";
     bmp_logo.BMP_write(
         logo_decode_path, logo_out_uchar,
         STDM::logo_width, STDM::logo_height, bmp_logo.bmp_bitPx
@@ -81,8 +81,8 @@ void lab_3_2(
 
     // open pic & logo
     BMP bmp_lena, bmp_logo;
-    std::string lena_path = "LENA.BMP";
-    std::string logo_path = "LOGO.BMP";
+    std::string lena_path = "./assets/LENA.BMP";
+    std::string logo_path = "./assets/LOGO.BMP";
     bmp_lena.BMP_read(lena_path);
     bmp_logo.BMP_read(logo_path);
 
@@ -120,12 +120,12 @@ void lab_3_2(
     int2UChar(logo_out, STDM::logo_size, logo_out_uchar);
 
     // output
-    std::string lena_out_path = "LENA-bak.BMP";
+    std::string lena_out_path = "./assets/LENA-bak.BMP";
     bmp_lena.BMP_write(
         lena_out_path, lena_out_uchar,
         STDM::pic_width, STDM::pic_height, bmp_lena.bmp_bitPx
     );
-    std::string logo_decode_path = "LOGO-decode.BMP";
+    std::string logo_decode_path = "./assets/LOGO-decode.BMP";
     bmp_logo.BMP_write(
         logo_decode_path, logo_out_uchar,
         STDM::logo_width, STDM::logo_height, bmp_logo.bmp_bitPx

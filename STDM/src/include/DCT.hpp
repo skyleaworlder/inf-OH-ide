@@ -12,6 +12,8 @@
 namespace DCT {
 
     extern std::vector<double> Quant_matrix_50;
+    extern std::vector<double> T_matrix_8x8;
+    extern std::vector<double> T_tp_matrix_8x8;
 
     /**
      * DCT 离散余弦变化
@@ -30,11 +32,13 @@ namespace DCT {
      * @param pixel_arr: vector<double> 输入
      * @param N: size_t pixel_arr size
      * @param q_level: size_t 量化矩阵指数
+     * @param is_jpeg: bool 是否模拟 jpeg 压缩
      */
     std::vector<double> DCT_inverse(
         std::vector<double> pixel_arr,
         const size_t N,
-        size_t q_level=50
+        size_t q_level=50,
+        bool is_jpeg=false
     );
 
     /**
