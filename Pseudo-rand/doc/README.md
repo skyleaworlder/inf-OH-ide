@@ -4,15 +4,15 @@
 
 ### 1. 高斯分布
 
-* 使用 `Box-Muller` 方法，产生符合高斯分布 $N(\mu, \delta^2)$ 的随机数；
-* 使用参数估计法估计相应的 $\mu, \sigma$；
+* 使用 `Box-Muller` 方法，产生符合高斯分布 $$N(\mu, \delta^2)$$ 的随机数；
+* 使用参数估计法估计相应的 $$\mu, \sigma$$；
 * 实验比较理论 `CDF` 和实际 `CDF`。
 
 ### 2. 指数分布
 
-* 使用逆函数法产生尺度参数为 $\beta$ 的指数分布；
+* 使用逆函数法产生尺度参数为 $$\beta$$ 的指数分布；
 * 估计参数的取值；
-* 推到 $\beta$ 的最大似然估计率参数估计法；
+* 推到 $$\beta$$ 的最大似然估计率参数估计法；
 * 实验比较理论 `CDF` 和实际 `CDF`。
 
 ### 3. 广义高斯分布
@@ -35,10 +35,12 @@
 **Box-Muller** 其实不是一个算法，而是一种方法，是生成任意随机分布的通用办法。
 
 我本人是难以揣摩 **Box-Muller** 方法真正内涵的，能够掌握的也仅仅是利用均匀分布来生成正态分布。
+
 $$
 X = cos(2\pi U_1) \sqrt{-2 \ln{U_2}} \\
 Y = sin(2\pi U_1) \sqrt{-2 \ln{U_2}}  
 $$
+
 其中，$X$ 和 $Y$ 均服从 $N(0, 1)$，仅要 $U_1, U_2$ 都是在 `[0,1]` 区间上的均匀分布。特别需要注意的是， $U_1, U_2$ 是不同的均匀分布。使用伪随机数生成器的时候也特别需要注意这一点。[1]
 
 由于一开始没有使用不同的随机数生成器，我们的代码是这样的：
@@ -61,28 +63,38 @@ double GuassDstrb_single_val(
 二者如果来源于同一随机数生成器，那么也就代表着极径与角度具有关联。
 
 但是假设这样的两个密度函数：
+
 $$
 p(X) = \dfrac{1}{\sqrt{2\pi}} \exp(-\dfrac{X^2}{2}) \\
 p(Y) = \dfrac{1}{\sqrt{2\pi}} \exp(-\dfrac{Y^2}{2})
 $$
+
 由于 $X, Y$ 独立，那么其联合概率函数为：
+
 $$
 p(X, Y) = \dfrac{1}{2\pi} \exp(-\dfrac{X^2 + Y^2}{2})
 $$
+
 极坐标变换：
+
 $$
 X = Rcos\theta 
 \\
 Y = Rsin\theta
 $$
+
 有：
+
 $$
 P_R(R \le r) = \int_0^{2\pi} \int_0^r \dfrac{1}{2\pi} \exp(-\dfrac{R^2}{2}) Rd\theta dR = 1 - \exp(-\dfrac{r^2}{2}) 
 $$
+
 其反函数为：
+
 $$
 R = F_R^{-1}(z) = \sqrt{-2 \ln(1-z)}
 $$
+
 上课也讲过的，这里需要换一个限，之后就可以得到课上讲的了。
 
 正是因为一开始没有注意到这一点，因此得出了错误的图像。
@@ -98,10 +110,13 @@ $$
 可是本题并不仅仅是求一个 **Incompatible Gamma Function**，还要在此基础之上，进一步得出广义高斯分布的分布函数。
 
 我们已知：
+
 $$
 F_{Gamma(\alpha, \beta)}(x) = \dfrac{1}{\Gamma(\alpha) \beta^\alpha} \int_0^x t^{\alpha - 1} \exp(-t / \beta) dt \\ = \dfrac{1}{\Gamma(\alpha)} \int_0^{x / \beta} t^{\alpha - 1} \exp(-t) dt
 $$
+
 对于广义高斯分布，其理论值如下：
+
 $$
 F_X(x) =
 \begin{cases}
@@ -112,11 +127,13 @@ F_X(x) =
 $$
 
 那么对于 $F_{Gamma(\frac{1}{c}, \frac{1}{\beta^c})}$，其公式推导过程如下：
+
 $$
 = \dfrac{1}{\Gamma(\alpha)} \beta^{c \frac{1}{c}} \int_0^x t^{\frac{1}{c} - 1} \exp(-t \beta^c) dt \\
 = \dfrac{1}{\Gamma(\alpha) \beta^{c-1}} \int_0^{\beta^c x} \dfrac{k^{\frac{1}{c}}}{\beta} \dfrac{\beta^c}{k} \exp(k) dk \\
 = \int_0^{\beta^c x} k^{\frac{1}{c}x} k^{\frac{1}{c}-1} \exp(k) dk = \int_0^{\beta^c x} t^{\frac{1}{c} - 1} \exp(t) dt
 $$
+
 于是可以将该式带入上方的广义高斯分布，组合得到程序代码。
 
 
@@ -218,6 +235,7 @@ return (-beta) * log(1-u);
 ```
 
 指数分布的 **极大似然参数估计** 是本题的第三问：
+
 $$
 L(\beta) = ln \prod_{i=1}^n (\dfrac{1}{\beta} e^{-x_i/\beta}) = nln\dfrac{1}{\beta} -\dfrac{1}{\beta} \sum_{i=1}^n x_i
 $$
@@ -243,6 +261,7 @@ return sum / arr.size();
 ### 4. 广义高斯分布生成及其检验
 
 广义高斯分布生成需要 0 / 1 分布以及 `Gamma` 分布的辅助：
+
 $$
 X =
 \begin{cases}
@@ -251,7 +270,9 @@ E^{1/c}, \quad if\ W = 1; \\
 -E^{1/c}, \quad if\ W = 0.
 \end{cases}
 $$
+
 其分布为：
+
 $$
 F_X(x) =
 \begin{cases}
@@ -260,6 +281,7 @@ F_X(x) =
 0.5 P(E > (-x)^c), \quad if\ x < 0.
 \end{cases}
 $$
+
 对应的代码如下：
 
 ```c++
