@@ -13,3 +13,9 @@
 * 扩频水印（等待完善）；
 * [蒙特卡洛仿真](https://github.com/skyleaworlder/inf-OH-ide/tree/main/MonteCarlo-simulate)；
 * [扩展变换抖动机制](https://github.com/skyleaworlder/inf-OH-ide/tree/main/STDM)。
+
+
+
+## 三、注意
+
+本仓库所有者这科拿良了，想拿优还是别看一个得良人的作业，有点晦气。
